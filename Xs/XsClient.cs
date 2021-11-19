@@ -1,6 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xs;
@@ -114,9 +113,7 @@ public class XsClient : IDisposable
 
     private ResponseWaiter CreateResponseWaiter(CoreWebView2 core, Predicate<Uri> predicate)
     {
-        ManualResetEvent mre = new(false);
-        GimmeDaBlood<CoreWebView2WebResourceResponseReceivedEventArgs> res = new();
-        return new ResponseWaiter(this, core, predicate, mre, res);
+        return new ResponseWaiter(this, core, predicate);
     }
 
     private void EnsureState()

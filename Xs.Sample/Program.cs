@@ -17,10 +17,20 @@ using var h = XsManager.CreateHandle();
 
 using (XsClient x = await XsManager.CreateClientAsync())
 {
-    var waiter = await x.CreateResponseWaiterAsync(v => v.Host == "api.fanbox.cc" && v.AbsolutePath == "/post.listCreator");
+    using var waiter = await x.CreateResponseWaiterAsync(v => v.Host == "api.fanbox.cc");
+    using var waiter2 = await x.CreateResponseWaiterAsync(v => v.Host == "api.fanbox.cc" && v.AbsolutePath == "/post.listCreator");
     await x.LoadAsync("https://fanbox.cc/@svchzz");
-    await waiter.ProcessResultAsync(r0 =>
+    var cts = new CancellationTokenSource(20_000);
+    var ct = cts.Token;
+    do
     {
-        Console.WriteLine(r0.Request.Uri);
+        await waiter.ProcessResultAsync(r0 =>
+        {
+            Console.WriteLine(r0.Request.Uri);
+        }, ct);
+    } while (!waiter2.ResultAvailable);
+    await waiter2.ProcessResultAsync(r0 =>
+    {
+        Console.WriteLine($"Main call: {r0.Request.Uri}");
     });
 }
