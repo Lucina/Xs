@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Xs;
@@ -101,6 +102,21 @@ public class XsClient : IDisposable
     {
         EnsureState();
         return _callManager.GetContentAsync();
+    }
+
+    /// <summary>
+    /// Creates a response waiter.
+    /// </summary>
+    /// <param name="predicate">Response predicate.</param>
+    /// <returns>Task returning waiter.</returns>
+    public async Task<ResponseWaiter> CreateResponseWaiterAsync(Predicate<Uri> predicate)
+        => await ExecuteAsync(v => CreateResponseWaiter(v, predicate));
+
+    private ResponseWaiter CreateResponseWaiter(CoreWebView2 core, Predicate<Uri> predicate)
+    {
+        ManualResetEvent mre = new(false);
+        GimmeDaBlood<CoreWebView2WebResourceResponseReceivedEventArgs> res = new();
+        return new ResponseWaiter(this, core, predicate, mre, res);
     }
 
     private void EnsureState()
