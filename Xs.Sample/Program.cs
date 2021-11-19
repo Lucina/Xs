@@ -1,4 +1,5 @@
-﻿using Xs;
+﻿using System.Text;
+using Xs;
 
 using var h = XsManager.CreateHandle();
 //await XsManager.ExecuteAsync(XsManager.BlankPage, async v =>
@@ -29,8 +30,10 @@ using (XsClient x = await XsManager.CreateClientAsync())
             Console.WriteLine(r0.Request.Uri);
         }, ct);
     } while (!waiter2.ResultAvailable);
-    await waiter2.ProcessResultAsync(r0 =>
+    await waiter2.ProcessResultAsync(async r0 =>
     {
         Console.WriteLine($"Main call: {r0.Request.Uri}");
+        Console.WriteLine($"Content:");
+        Console.WriteLine(new StreamReader(await r0.Response.GetContentAsync()).ReadToEnd());
     });
 }
