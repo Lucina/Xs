@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Xs;
 
-internal interface ICallManager : IDisposable
+internal interface IWebView2Operator : IDisposable
 {
     Task ReadyAsync();
     Task LoadAsync(string page);

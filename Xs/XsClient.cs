@@ -9,11 +9,11 @@ namespace Xs;
 /// </summary>
 public class XsClient : IDisposable
 {
-    private readonly ICallManager _callManager;
+    private readonly IWebView2Operator _callManager;
     private bool _disposed;
     private bool _ready;
 
-    internal XsClient(ICallManager mgr)
+    internal XsClient(IWebView2Operator mgr)
     {
         _callManager = mgr;
     }

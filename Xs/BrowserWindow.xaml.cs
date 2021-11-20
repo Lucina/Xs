@@ -11,7 +11,7 @@ namespace Xs;
 /// <summary>
 /// Interaction logic for BrowserWindow.xaml
 /// </summary>
-public sealed partial class BrowserWindow : Window, ICallManager
+public sealed partial class BrowserWindow : Window, IWebView2Operator
 {
     private readonly XsClient _xs;
     private readonly ManualResetEvent _readyMre;
@@ -53,9 +53,9 @@ public sealed partial class BrowserWindow : Window, ICallManager
         _ = new NavHandler(webView, post);
     }
 
-    Task ICallManager.ReadyAsync() => Task.Run(() => _readyMre.WaitOne());
+    Task IWebView2Operator.ReadyAsync() => Task.Run(() => _readyMre.WaitOne());
 
-    async Task ICallManager.LoadAsync(string page)
+    async Task IWebView2Operator.LoadAsync(string page)
     {
         using ManualResetEvent mre = new(false);
         RegisterNav(() => mre.Set());
@@ -63,7 +63,7 @@ public sealed partial class BrowserWindow : Window, ICallManager
         await Task.Run(() => mre.WaitOne());
     }
 
-    async Task ICallManager.ExecuteAsync(Action<CoreWebView2> action)
+    async Task IWebView2Operator.ExecuteAsync(Action<CoreWebView2> action)
     {
         using ManualResetEvent mre = new(false);
         await Dispatcher.InvokeAsync(() =>
@@ -80,7 +80,7 @@ public sealed partial class BrowserWindow : Window, ICallManager
         await Task.Run(() => mre.WaitOne());
     }
 
-    async Task ICallManager.ExecuteAsync(Func<CoreWebView2, Task> action)
+    async Task IWebView2Operator.ExecuteAsync(Func<CoreWebView2, Task> action)
     {
         using ManualResetEvent mre = new(false);
         await Dispatcher.InvokeAsync(async () =>
@@ -97,7 +97,7 @@ public sealed partial class BrowserWindow : Window, ICallManager
         await Task.Run(() => mre.WaitOne());
     }
 
-    async Task<T> ICallManager.ExecuteAsync<T>(Func<CoreWebView2, T> function)
+    async Task<T> IWebView2Operator.ExecuteAsync<T>(Func<CoreWebView2, T> function)
     {
         using ManualResetEvent mre = new(false);
         GimmeDaBlood<T> r = new();
@@ -116,7 +116,7 @@ public sealed partial class BrowserWindow : Window, ICallManager
         return r.Result;
     }
 
-    async Task<T> ICallManager.ExecuteAsync<T>(Func<CoreWebView2, Task<T>> function)
+    async Task<T> IWebView2Operator.ExecuteAsync<T>(Func<CoreWebView2, Task<T>> function)
     {
         using ManualResetEvent mre = new(false);
         GimmeDaBlood<T> r = new();
@@ -135,7 +135,7 @@ public sealed partial class BrowserWindow : Window, ICallManager
         return r.Result;
     }
 
-    async Task<string> ICallManager.ExecuteJsAsync(string js)
+    async Task<string> IWebView2Operator.ExecuteJsAsync(string js)
     {
         using ManualResetEvent mre = new(false);
         GimmeDaBlood<string> gdb = new();
@@ -144,7 +144,7 @@ public sealed partial class BrowserWindow : Window, ICallManager
         return gdb.Result;
     }
 
-    Task<string> ICallManager.GetContentAsync() => ((ICallManager)this).ExecuteJsAsync("document.documentElement.outerHTML;");
+    Task<string> IWebView2Operator.GetContentAsync() => ((IWebView2Operator)this).ExecuteJsAsync("document.documentElement.outerHTML;");
 
     private Task<string> Js_UIONLYAsync(string js) => Js_UIONLYAsync(webView, js);
 

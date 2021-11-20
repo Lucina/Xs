@@ -17,7 +17,6 @@ public static class XsManager
     public const string BlankPage = "about:blank";
 
     private static bool _init;
-    private static bool _closed;
     private static Application? a;
     private static ManualResetEvent? mainMre;
 
@@ -41,6 +40,7 @@ public static class XsManager
             a.Run();
         });
         Thread tr = new(ts);
+        tr.IsBackground = true;
         tr.SetApartmentState(ApartmentState.STA);
         tr.Start();
         mainMre.WaitOne();
@@ -134,26 +134,8 @@ public static class XsManager
         return await client.ExecuteAsync(function);
     }
 
-    /// <summary>
-    /// Creates a new Xs quit handle.
-    /// </summary>
-    /// <returns>Quit handle.</returns>
-    public static XsHandle CreateHandle() => new();
-
-    /// <summary>
-    /// Quits browser manager.
-    /// </summary>
-    public static void Quit()
-    {
-        if (_closed) return;
-        EnsureState();
-        _closed = true;
-        MainWindow._singleton!.Dispatcher.InvokeAsync(() => MainWindow._singleton.Close());
-    }
-
     private static void EnsureState()
     {
-        if (_closed) throw new InvalidOperationException();
-        if (a == null || MainWindow._singleton == null) throw new InvalidOperationException();
+        if (!_init || a == null || MainWindow._singleton == null) throw new InvalidOperationException();
     }
 }
