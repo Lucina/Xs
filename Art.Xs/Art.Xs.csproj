@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageVersion>0.39.0</PackageVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Art.Html" Version="0.39.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xs" Version="0.2.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>NU5105</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackOnBuild>true</PackOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Lucina</Authors>
+    <Owners>Lucina</Owners>
+    <Description>Artifact retrieval toolkit (Xs variants)</Description>
+    <Copyright>Copyright ©2021 Lucina</Copyright>
+    <PackageProjectUrl>https://github.com/Lucina/Xs</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Lucina/Xs</RepositoryUrl>
+    <Company>Lucina</Company>
+  </PropertyGroup>
+
+</Project>
